@@ -103,6 +103,7 @@ body {
   max-width: 1128px;
   gap: 24px;
   margin: 0 auto;
+  padding-bottom: 10px;
 }
 .gallery-item {
   display: flex;
@@ -120,4 +121,9 @@ body {
 }
 .gallery-item img:hover {
   transform: scale(1.05);
+}
+
+.load-more-btn {
+  display: none;
+  margin: 0 auto;
 }
