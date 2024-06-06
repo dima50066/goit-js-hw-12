@@ -5,7 +5,13 @@ import iziToast from 'izitoast';
 export function clearGallery(galleryElement) {
   galleryElement.innerHTML = '';
 }
+galleryElement.insertAdjacentHTML('beforeend', markup);
 
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
+lightbox.refresh();
 export function showLoader(loaderElement) {
   loaderElement.style.display = 'block';
 }
@@ -30,14 +36,6 @@ export function renderImages(images, galleryElement) {
     `;
     })
     .join('');
-
-  galleryElement.insertAdjacentHTML('beforeend', markup);
-
-  const lightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionDelay: 250,
-  });
-  lightbox.refresh();
 }
 
 export function showError(message) {

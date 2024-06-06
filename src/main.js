@@ -19,6 +19,7 @@ const loader = document.getElementById('loader');
 const loadMoreBtn = document.getElementById('load-more-btn');
 
 let currentPage = 1;
+const perPage = 15;
 
 searchForm.addEventListener('submit', async event => {
   event.preventDefault();
@@ -32,8 +33,11 @@ searchForm.addEventListener('submit', async event => {
   clearGallery(gallery);
   showLoader(loader);
 
+  currentPage = 1;
+  loadMoreBtn.style.display = 'none';
+
   try {
-    const data = await fetchImages(query);
+    const data = await fetchImages(query, currentPage, perPage);
     hideLoader(loader);
 
     const images = data.hits;
@@ -46,9 +50,15 @@ searchForm.addEventListener('submit', async event => {
     }
 
     renderImages(images, gallery);
-    loadMoreBtn.style.display = 'block';
+
+    if (images.length < perPage) {
+      loadMoreBtn.style.display = 'none';
+    } else {
+      loadMoreBtn.style.display = 'block';
+    }
   } catch (error) {
     hideLoader(loader);
+    loadMoreBtn.style.display = 'none';
     showError('Something went wrong. Please try again later.');
     console.error(error);
   }
@@ -57,7 +67,11 @@ searchForm.addEventListener('submit', async event => {
 loadMoreBtn.addEventListener('click', async () => {
   currentPage++;
   try {
-    const data = await fetchImages(searchInput.value.trim(), currentPage);
+    const data = await fetchImages(
+      searchInput.value.trim(),
+      currentPage,
+      perPage
+    );
     renderImages(data.hits, gallery);
 
     window.scrollBy({
@@ -65,7 +79,7 @@ loadMoreBtn.addEventListener('click', async () => {
       behavior: 'smooth',
     });
 
-    if (data.hits.length === 0 || data.totalHits <= currentPage * perPage) {
+    if (data.hits.length < perPage || data.totalHits <= currentPage * perPage) {
       loadMoreBtn.style.display = 'none';
       showInfo("We're sorry, but you've reached the end of search results.");
     }
